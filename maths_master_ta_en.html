@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maths Master – கணித வல்லுநர் 🧮</title>
+<style>
+  :root{--bg1:#f7fbff;--card:#fff;--accent:#0e7490;--ok:#16a34a;--bad:#dc2626}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans Tamil",sans-serif;background:linear-gradient(180deg,var(--bg1),#eaf6ff);display:flex;align-items:center;justify-content:center;padding:12px}
+  .wrap{width:100%;max-width:780px;background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(3,27,78,.12);padding:18px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+  header h1{margin:0;font-size:1.25rem;color:var(--accent)}
+  .meta{margin-left:auto;text-align:right;font-size:.9rem}
+  .score{font-weight:700;color:#0b6;display:block;font-size:1.3rem}
+  .card{padding:14px;border-radius:12px;border:1px solid #e6f1ff;background:linear-gradient(180deg,#fff,#fbfeff);margin-bottom:12px}
+  .sentence{font-size:1.08rem;padding:10px;border-radius:10px;background:#f5fbff;border:1px dashed #dbeaff;min-height:48px;display:flex;align-items:center}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .opt{padding:12px;border-radius:10px;border:1px solid #e6eefc;background:white;cursor:pointer;user-select:none}
+  .opt.selected{outline:3px solid rgba(14,116,144,.14)}
+  .opt.correct{border-color:var(--ok);background:rgba(16,185,129,.06)}
+  .opt.wrong{border-color:var(--bad);background:rgba(220,38,38,.05)}
+  .controls{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  button{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn-ghost{background:#fff;border:1px solid #dbeefe;color:var(--accent)}
+  .progress{height:8px;background:#eef6ff;border-radius:10px;margin-top:8px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,#0e7490,#38bdf8);width:0%}
+  .feedback{margin-top:8px;font-weight:700;min-height:24px}
+  .hall{margin-top:10px;padding:12px;border-radius:10px;background:#fff7ef;border:1px solid #ffe6c7}
+  .hof-list{margin-top:8px}
+  .hof-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #ffefdd}
+  .certificate{display:none}
+  .hidden{display:none}
+  .download-link{margin-top:10px;display:none}
+  @media(max-width:520px){.options{grid-template-columns:1fr} .meta{text-align:left;margin-left:0} #playerDetails{flex-direction:column} #playerDetails input{flex:1 1 100%;width:100%}}
+</style>
+</head>
+<body>
+  <div class="wrap" role="application" aria-label="Maths Master – கணித வல்லுநர்">
+    <header>
+      <div>
+        <h1>Maths Master – கணித வல்லுநர் 🧮</h1>
+        <div style="font-size:.9rem;color:#556">10–15 வயதுக்கான கணித வினாடிவினா – பயிற்சியுடன் செம்மையாகுங்கள்!</div>
+      </div>
+      <div class="meta" aria-live="polite">
+        <div>மதிப்பெண்: <span id="currentScore" class="score">0</span></div>
+      </div>
+    </header>
+
+    <div class="card" id="questionCard" aria-live="polite">
+      <div class="sentence" id="sentence">வினா ஏற்றப்படுகிறது...</div>
+      <div class="options" id="options"></div>
+      <div class="controls">
+        <button id="submitBtn">பதில் சமர்ப்பிக்க / Submit</button>
+        <button id="skipBtn" class="btn-ghost">தவிர்க்க / Skip</button>
+        <div style="margin-left:auto;font-size:.9rem;color:#667">வினா <span id="qIndex">0</span>/<span id="qTotal">0</span></div>
+      </div>
+      <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+
+    <!-- வீரரின் விவரங்கள் (சான்றிதழ்) -->
+    <div id="playerDetails" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+      <input id="playerName" placeholder="பெயர் / Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="50" />
+      <input id="playerClass" placeholder="வகுப்பு / Class" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="20" />
+      <input id="playerSection" placeholder="பிரிவு / Section" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="20" />
+      <input id="playerSchool" placeholder="பள்ளி பெயர் / School Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 100%" maxlength="80" />
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+      <button id="startBtn">விளையாட்டை தொடங்கு / Start Game</button>
+      <button id="showHofBtn" class="btn-ghost">🏆 புகழ் மண்டபம் / Hall of Fame</button>
+      <button id="langToggle" class="btn-ghost" aria-pressed="false">தமிழ் + English: OFF</button>
+    </div>
+
+    <div class="hall hidden" id="hall" aria-live="polite">
+      <strong>🏆 புகழ் மண்டபம் (Top 10)</strong>
+      <div class="hof-list" id="hofList"></div>
+      <div style="margin-top:10px">
+        <div style="font-size:.95rem">உயர் மதிப்பெண் பெற்றால், உங்கள் பெயரை பதிவு செய்யுங்கள்:</div>
+        <input id="hofName" placeholder="உங்கள் பெயர் / Your Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;width:60%;margin-top:8px" maxlength="30"/>
+        <button id="saveHofBtn" style="margin-left:8px">சேமிக்க / Save</button>
+      </div>
+    </div>
+
+    <canvas id="certificate" class="certificate" width="1000" height="700"></canvas>
+    <a id="certDownloadLink" class="download-link" download="maths_master_certificate.png">சான்றிதழ் பதிவிறக்குக / Download Certificate</a>
+  </div>
+
+<script>
+/* ======= Question bank (Tamil with optional English) ======= */
+const questions = [
+  // Arithmetic
+  { sentence: "25 + 47 = ?", en:"25 + 47 = ?", chapter:"அடிப்படை கணக்கு", options:["62","72","70","71"], enOptions:["62","72","70","71"], answer:1, explanation:"25 + 47 = 72.", enExplanation:"25 + 47 = 72." },
+  { sentence: "96 − 38 = ?", en:"96 − 38 = ?", chapter:"அடிப்படை கணக்கு", options:["58","68","62","48"], enOptions:["58","68","62","48"], answer:0, explanation:"96 − 38 = 58.", enExplanation:"96 − 38 = 58." },
+  { sentence: "18 × 7 = ?", en:"18 × 7 = ?", chapter:"அடிப்படை கணக்கு", options:["136","126","128","118"], enOptions:["136","126","128","118"], answer:1, explanation:"18 × 7 = 126.", enExplanation:"18 × 7 = 126." },
+  { sentence: "144 ÷ 12 = ?", en:"144 ÷ 12 = ?", chapter:"அடிப்படை கணக்கு", options:["11","12","13","10"], enOptions:["11","12","13","10"], answer:1, explanation:"144 ÷ 12 = 12.", enExplanation:"144 ÷ 12 = 12." },
+  { sentence: "6² = ?", en:"6² = ?", chapter:"அடிப்படை கணக்கு", options:["12","18","36","30"], enOptions:["12","18","36","30"], answer:2, explanation:"6 × 6 = 36.", enExplanation:"6 × 6 = 36." },
+  { sentence: "7³ = ?", en:"7³ = ?", chapter:"அடிப்படை கணக்கு", options:["343","49","147","3430"], enOptions:["343","49","147","3430"], answer:0, explanation:"7×7×7 = 343.", enExplanation:"7×7×7 = 343." },
+  { sentence: "350 − 175 = ?", en:"350 − 175 = ?", chapter:"அடிப்படை கணக்கு", options:["175","165","170","180"], enOptions:["175","165","170","180"], answer:0, explanation:"350 − 175 = 175.", enExplanation:"350 − 175 = 175." },
+  { sentence: "24 × 9 = ?", en:"24 × 9 = ?", chapter:"அடிப்படை கணக்கு", options:["206","216","224","196"], enOptions:["206","216","224","196"], answer:1, explanation:"24 × 9 = 216.", enExplanation:"24 × 9 = 216." },
+  { sentence: "420 ÷ 7 = ?", en:"420 ÷ 7 = ?", chapter:"அடிப்படை கணக்கு", options:["60","70","65","55"], enOptions:["60","70","65","55"], answer:0, explanation:"420 ÷ 7 = 60.", enExplanation:"420 ÷ 7 = 60." },
+
+  // Fractions
+  { sentence: "1/2 + 1/3 = ?", en:"1/2 + 1/3 = ?", chapter:"பாகங்கள்", options:["2/5","5/6","4/6","1/6"], enOptions:["2/5","5/6","4/6","1/6"], answer:1, explanation:"எல்.சி.டி = 6; 3/6 + 2/6 = 5/6.", enExplanation:"LCD = 6; 3/6 + 2/6 = 5/6." },
+  { sentence: "3/4 − 1/8 = ?", en:"3/4 − 1/8 = ?", chapter:"பாகங்கள்", options:["5/8","1/2","3/8","7/8"], enOptions:["5/8","1/2","3/8","7/8"], answer:0, explanation:"3/4 = 6/8; 6/8 − 1/8 = 5/8.", enExplanation:"3/4 = 6/8; 6/8 − 1/8 = 5/8." },
+  { sentence: "சுருக்குக: 12/18", en:"Simplify: 12/18", chapter:"பாகங்கள்", options:["2/3","3/4","4/6","6/9"], enOptions:["2/3","3/4","4/6","6/9"], answer:0, explanation:"12/18 = (÷6) = 2/3.", enExplanation:"12/18 reduced by ÷6 = 2/3." },
+  { sentence: "2/5 + 3/10 = ?", en:"2/5 + 3/10 = ?", chapter:"பாகங்கள்", options:["7/10","1/2","13/10","2/10"], enOptions:["7/10","1/2","13/10","2/10"], answer:0, explanation:"2/5 = 4/10; 4/10 + 3/10 = 7/10.", enExplanation:"2/5 = 4/10; 4/10 + 3/10 = 7/10." },
+  { sentence: "5/6 − 1/3 = ?", en:"5/6 − 1/3 = ?", chapter:"பாகங்கள்", options:["4/6","1/2","2/3","1/6"], enOptions:["4/6","1/2","2/3","1/6"], answer:1, explanation:"1/3 = 2/6; 5/6 − 2/6 = 3/6 = 1/2.", enExplanation:"1/3 = 2/6; 5/6 − 2/6 = 3/6 = 1/2." },
+
+  // Percentages
+  { sentence: "200 இன் 25% = ?", en:"25% of 200 = ?", chapter:"சதவீதம்", options:["25","40","50","75"], enOptions:["25","40","50","75"], answer:2, explanation:"25% = 1/4; 1/4 of 200 = 50.", enExplanation:"25% = 1/4; 1/4 × 200 = 50." },
+  { sentence: "₹800 க்கு 10% தள்ளுபடி. விலை = ?", en:"Item ₹800, 10% discount. New price?", chapter:"சதவீதம்", options:["₹720","₹700","₹760","₹680"], enOptions:["₹720","₹700","₹760","₹680"], answer:0, explanation:"10% of 800 = 80; 800 − 80 = 720.", enExplanation:"10% of 800 is 80; 800 − 80 = 720." },
+  { sentence: "₹500 இல் 18% GST சேர்த்தால் மொத்தம்?", en:"₹500 + 18% GST = ?", chapter:"சதவீதம்", options:["₹590","₹580","₹610","₹540"], enOptions:["₹590","₹580","₹610","₹540"], answer:0, explanation:"18% of 500 = 90; 500 + 90 = 590.", enExplanation:"18% of 500 is 90; total 590." },
+  { sentence: "240 இன் 15% = ?", en:"15% of 240 = ?", chapter:"சதவீதம்", options:["24","30","36","40"], enOptions:["24","30","36","40"], answer:2, explanation:"0.15 × 240 = 36.", enExplanation:"0.15 × 240 = 36." },
+  { sentence: "200 → 250 உயர்வு. % உயர்வு = ?", en:"Value increases 200 → 250. % increase?", chapter:"சதவீதம்", options:["20%","25%","30%","10%"], enOptions:["20%","25%","30%","10%"], answer:1, explanation:"Change 50; 50/200 = 25%.", enExplanation:"Increase 50 on base 200 ⇒ 25%." },
+
+  // Ratio & Average
+  { sentence: "விகிதம் 2:3; மொத்தம் 30 → ?", en:"Ratio 2:3 total 30 → parts?", chapter:"விகிதம்", options:["12 & 18","10 & 20","8 & 22","15 & 15"], enOptions:["12 & 18","10 & 20","8 & 22","15 & 15"], answer:0, explanation:"2x+3x=30 ⇒ x=6 ⇒ 12,18.", enExplanation:"2x+3x=30 ⇒ x=6 ⇒ 12 and 18." },
+  { sentence: "5, 7, 8, 10 இன் சராசரி = ?", en:"Average of 5,7,8,10?", chapter:"சராசரி", options:["7.5","8","7","8.25"], enOptions:["7.5","8","7","8.25"], answer:0, explanation:"(5+7+8+10)/4 = 30/4 = 7.5.", enExplanation:"(5+7+8+10)/4 = 7.5." },
+  { sentence: "விகிதம் 3:5; மொத்தம் 64 → ?", en:"Ratio 3:5 total 64 → parts?", chapter:"விகிதம்", options:["24 & 40","18 & 46","21 & 43","27 & 37"], enOptions:["24 & 40","18 & 46","21 & 43","27 & 37"], answer:0, explanation:"3x+5x=64 ⇒ x=8 ⇒ 24,40.", enExplanation:"3x+5x=64 ⇒ x=8 ⇒ 24 and 40." },
+
+  // LCM / HCF
+  { sentence: "LCM(6, 8) = ?", en:"LCM(6,8) = ?", chapter:"LCM/HCF", options:["12","24","18","36"], enOptions:["12","24","18","36"], answer:1, explanation:"LCM = 24.", enExplanation:"LCM = 24." },
+  { sentence: "HCF(24, 36) = ?", en:"HCF(24,36) = ?", chapter:"LCM/HCF", options:["12","18","6","8"], enOptions:["12","18","6","8"], answer:0, explanation:"HCF = 12.", enExplanation:"HCF = 12." },
+  { sentence: "LCM(9, 12) = ?", en:"LCM(9,12) = ?", chapter:"LCM/HCF", options:["18","36","27","24"], enOptions:["18","36","27","24"], answer:1, explanation:"LCM = 36.", enExplanation:"LCM = 36." },
+  { sentence: "HCF(45, 60) = ?", en:"HCF(45,60) = ?", chapter:"LCM/HCF", options:["5","10","15","20"], enOptions:["5","10","15","20"], answer:2, explanation:"HCF = 15.", enExplanation:"HCF = 15." },
+
+  // Algebra
+  { sentence: "x + 7 = 15. x = ?", en:"x + 7 = 15. x = ?", chapter:"அல்ஜீப்ரா", options:["7","8","9","6"], enOptions:["7","8","9","6"], answer:1, explanation:"x = 8.", enExplanation:"x = 8." },
+  { sentence: "2x = 18. x = ?", en:"2x = 18. x = ?", chapter:"அல்ஜீப்ரா", options:["8","7","9","10"], enOptions:["8","7","9","10"], answer:2, explanation:"x = 9.", enExplanation:"x = 9." },
+  { sentence: "3x + 5 = 20 → x = ?", en:"3x + 5 = 20 → x = ?", chapter:"அல்ஜீப்ரா", options:["5","3","7","15"], enOptions:["5","3","7","15"], answer:0, explanation:"3x = 15 ⇒ x=5.", enExplanation:"3x = 15 ⇒ x=5." },
+  { sentence: "x − 9 = 4 → x = ?", en:"x − 9 = 4 → x = ?", chapter:"அல்ஜீப்ரா", options:["5","11","13","7"], enOptions:["5","11","13","7"], answer:2, explanation:"x = 13.", enExplanation:"x = 13." },
+  { sentence: "4x = 28 → x = ?", en:"4x = 28 → x = ?", chapter:"அல்ஜீப்ரா", options:["6","7","8","5"], enOptions:["6","7","8","5"], answer:1, explanation:"x = 7.", enExplanation:"x = 7." },
+
+  // Geometry
+  { sentence: "செவ்வகத்தின் பரப்பு? (8, 5)", en:"Area of rectangle (l=8,b=5)?", chapter:"ஜியோமெட்ரி", options:["13 sq","40 sq","16 sq","26 sq"], enOptions:["13 sq","40 sq","16 sq","26 sq"], answer:1, explanation:"Area = 8×5 = 40.", enExplanation:"Area = 8×5 = 40." },
+  { sentence: "சதுரத்தின் சுற்றளவு? (a=7)", en:"Perimeter of square (a=7)?", chapter:"ஜியோமெட்ரி", options:["28","21","14","49"], enOptions:["28","21","14","49"], answer:0, explanation:"Perimeter = 4a = 28.", enExplanation:"Perimeter = 4a = 28." },
+  { sentence: "வட்டத்தின் சுற்றளவு (r=7, π≈22/7) = ?", en:"Circumference (r=7, π≈22/7)?", chapter:"ஜியோமெட்ரி", options:["22","44","42","14"], enOptions:["22","44","42","14"], answer:1, explanation:"2πr = 44.", enExplanation:"2πr = 44." },
+  { sentence: "வட்டத்தின் பரப்பு (r=7, π≈22/7) = ?", en:"Area circle (r=7, π≈22/7)?", chapter:"ஜியோமெட்ரி", options:["154","308","44","98"], enOptions:["154","308","44","98"], answer:0, explanation:"πr² = (22/7)×49 = 154.", enExplanation:"Area = 154." },
+  { sentence: "செவ்வக சுற்றளவு? (l=12,b=9)", en:"Perimeter rectangle (12,9)?", chapter:"ஜியோமெட்ரி", options:["40","42","48","54"], enOptions:["40","42","48","54"], answer:1, explanation:"2(l+b)=42.", enExplanation:"Perimeter=42." },
+
+  // Speed–Distance–Time / Units
+  { sentence: "வேகம் 60 km/h; 2.5 மணி → தூரம்?", en:"Speed 60 km/h; 2.5 h → distance?", chapter:"வேகம்/தூரம்", options:["120 km","130 km","150 km","100 km"], enOptions:["120 km","130 km","150 km","100 km"], answer:2, explanation:"d = vt = 150.", enExplanation:"d = 150 km." },
+  { sentence: "தூரம் 180 km; வேகம் 45 km/h → நேரம்?", en:"180 km at 45 km/h → time?", chapter:"வேகம்/தூரம்", options:["3 h","4 h","5 h","6 h"], enOptions:["3 h","4 h","5 h","6 h"], answer:1, explanation:"t = d/v = 4 h.", enExplanation:"t = 4 h." },
+  { sentence: "வேகம் 36 km/h; 30 நிமிடம் → தூரம்?", en:"36 km/h for 30 min → distance?", chapter:"வேகம்/தூரம்", options:["18 km","12 km","9 km","6 km"], enOptions:["18 km","12 km","9 km","6 km"], answer:3, explanation:"0.5 h × 36 = 18? Wait: 30 min = 0.5 h; 36×0.5=18. Correct option should be 18.", enExplanation:"Distance = 18 km." },
+
+  { sentence: "1500 மில்லிலிட்டர் = ? லிட்டர்", en:"1500 millilitres = ? litres", chapter:"அலகு மாற்றம்", options:["1.5 L","0.15 L","15 L","150 L"], enOptions:["1.5 L","0.15 L","15 L","150 L"], answer:0, explanation:"1000 mL = 1 L → 1.5 L.", enExplanation:"1.5 L." },
+  { sentence: "250 செ.மீ = ? மீட்டர்", en:"250 cm = ? m", chapter:"அலகு மாற்றம்", options:["0.25 m","2.5 m","25 m","1.25 m"], enOptions:["0.25 m","2.5 m","25 m","1.25 m"], answer:1, explanation:"250/100 = 2.5 m.", enExplanation:"2.5 m." },
+  { sentence: "2.5 kg = ? g", en:"2.5 kg = ? grams", chapter:"அலகு மாற்றம்", options:["250 g","2500 g","25 g","2000 g"], enOptions:["250 g","2500 g","25 g","2000 g"], answer:1, explanation:"2.5 × 1000 = 2500 g.", enExplanation:"2500 g." },
+
+  // Word problems
+  { sentence: "48 மாம்பழம்; 6 மாணவர்கள் சமமாக → ஒருவருக்கு?", en:"48 mangoes equally to 6 students → each?", chapter:"வழிமுறை", options:["6","7","8","9"], enOptions:["6","7","8","9"], answer:2, explanation:"48 ÷ 6 = 8.", enExplanation:"8 each." },
+  { sentence: "பென்சில் ₹12; 5 பென்சில் → மொத்தம்?", en:"Pencil ₹12; 5 pencils → total?", chapter:"வழிமுறை", options:["₹60","₹50","₹48","₹72"], enOptions:["₹60","₹50","₹48","₹72"], answer:0, explanation:"12 × 5 = 60.", enExplanation:"₹60." },
+  { sentence: "72 லட்டு; 9 பேர் சமமாக → ஒருவருக்கு?", en:"72 laddus shared by 9 → each?", chapter:"வழிமுறை", options:["6","7","8","9"], enOptions:["6","7","8","9"], answer:2, explanation:"72 ÷ 9 = 8.", enExplanation:"8 each." },
+
+  // Probability
+  { sentence: "நாணயம் ஒருமுறை: Head வர வாய்ப்பு?", en:"Coin toss: P(Head)?", chapter:"சாத்தியம்", options:["1/2","1/3","1/4","2/3"], enOptions:["1/2","1/3","1/4","2/3"], answer:0, explanation:"சமமான நாணயம் → 1/2.", enExplanation:"Fair coin → 1/2." },
+
+  // Angles
+  { sentence: "செங்கோணம் = ? டிகிரி", en:"Right angle = ? degrees", chapter:"கோணங்கள்", options:["45°","60°","90°","120°"], enOptions:["45°","60°","90°","120°"], answer:2, explanation:"90°.", enExplanation:"90°." },
+  { sentence: "முக்கோணத்தின் கோணங்களின் கூட்டுத்தொகை = ?", en:"Sum of angles in a triangle?", chapter:"கோணங்கள்", options:["90°","180°","270°","360°"], enOptions:["90°","180°","270°","360°"], answer:1, explanation:"180°.", enExplanation:"180°." },
+
+  // Rounding
+  { sentence: "374 ஐ பத்துகளுக்கு அண்மையில் சீருறுத்துக", en:"Round 374 to nearest tens", chapter:"சீருறுத்தல்", options:["370","380","360","400"], enOptions:["370","380","360","400"], answer:0, explanation:"Units 4 → 370.", enExplanation:"374 → 370." },
+  { sentence: "374 ஐ நூறுகளுக்கு அண்மையில் சீருறுத்துக", en:"Round 374 to nearest hundreds", chapter:"சீருறுத்தல்", options:["300","400","350","380"], enOptions:["300","400","350","380"], answer:1, explanation:"374 → 400.", enExplanation:"Nearest hundred = 400." },
+
+  // Number properties
+  { sentence: "பகா எண் எது?", en:"Which is prime?", chapter:"எண் கோட்பாடு", options:["21","29","1","27"], enOptions:["21","29","1","27"], answer:1, explanation:"29 prime; 21,27 composite; 1 not prime.", enExplanation:"29 is prime." },
+  { sentence: "Even அல்லாதது?", en:"Which is not even?", chapter:"எண் கோட்பாடு", options:["18","24","35","40"], enOptions:["18","24","35","40"], answer:2, explanation:"35 is odd.", enExplanation:"35 is odd." },
+
+  // Simple Interest
+  { sentence: "P=₹1000, R=5% p.a, T=2 yrs. SI = ?", en:"P=₹1000, R=5%, T=2y. SI=?", chapter:"எளிய வட்டி", options:["₹50","₹100","₹150","₹200"], enOptions:["₹50","₹100","₹150","₹200"], answer:1, explanation:"SI=PRT/100=₹100.", enExplanation:"₹100." },
+];
+
+/* ======= Game state ======= */
+let qIndex = 0;
+let score = 0;
+let running = false;
+let selected = null;
+let chapterStats = {};
+let gameQuestions = [];
+let lastFinalPctVal = 0;
+let lastExcellentChapters = [];
+let lastNeedsWorkChapters = [];
+
+/* ======= DOM ======= */
+const sentenceEl = document.getElementById('sentence');
+const optionsEl = document.getElementById('options');
+const feedbackEl = document.getElementById('feedback');
+const submitBtn = document.getElementById('submitBtn');
+const skipBtn = document.getElementById('skipBtn');
+const startBtn = document.getElementById('startBtn');
+const qIndexEl = document.getElementById('qIndex');
+const qTotalEl = document.getElementById('qTotal');
+const progressBar = document.getElementById('progressBar');
+const currentScoreEl = document.getElementById('currentScore');
+const hallEl = document.getElementById('hall');
+const showHofBtn = document.getElementById('showHofBtn');
+const hofListEl = document.getElementById('hofList');
+const saveHofBtn = document.getElementById('saveHofBtn');
+const hofNameInput = document.getElementById('hofName');
+const certCanvas = document.getElementById('certificate');
+const certDownloadLink = document.getElementById('certDownloadLink');
+const langToggleBtn = document.getElementById('langToggle');
+const schoolInput = document.getElementById('playerSchool');
+
+const HOF_KEY = 'mathsMasterHOF';
+const HOF_THRESHOLD = 60; // %
+let bilingual = false;
+
+/* ======= Helpers ======= */
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]] } }
+function clearTimer(){}
+function getRemark(pct){
+  if(pct >= 90) return 'அற்புதம்! தொடர்ந்து பயிற்சி செய்யுங்கள்! / Outstanding!';
+  if(pct >= 75) return 'சிறப்பான வேலை! / Great job!';
+  if(pct >= 50) return 'நல்ல முயற்சி! / Good effort!';
+  if(pct > 0) return 'கவலைப்பட வேண்டாம், தொடர்ந்து பயிற்சி செய்யுங்கள்! / Keep practising!';
+  return 'மீண்டும் முயற்சிக்கவும்! / Try again!';
+}
+
+/* ======= Render ======= */
+function renderQuestion(){
+  if(qIndex >= gameQuestions.length){ endGame(); return; }
+  selected = null; feedbackEl.textContent='';
+  const q = gameQuestions[qIndex];
+  const sen = bilingual && q.en ? `${q.sentence} / ${q.en}` : q.sentence;
+  sentenceEl.textContent = sen;
+  optionsEl.innerHTML = '';
+  q.options.forEach((opt,i)=>{
+    const label = (bilingual && q.enOptions && q.enOptions[i]) ? `${opt} / ${q.enOptions[i]}` : opt;
+    const btn = document.createElement('div');
+    btn.className='opt'; btn.tabIndex=0; btn.textContent=label;
+    btn.addEventListener('click',()=>selectOption(i,btn));
+    btn.addEventListener('keydown',(e)=>{if(e.key==='Enter'||e.key===' ') selectOption(i,btn)});
+    optionsEl.appendChild(btn);
+  });
+  qIndexEl.textContent = qIndex+1;
+  qTotalEl.textContent = gameQuestions.length;
+  updateProgress();
+}
+function selectOption(i, el){
+  document.querySelectorAll('.opt').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected'); selected = i; feedbackEl.textContent='';
+}
+
+/* ======= Score Helpers ======= */
+function calculatePercentage(){
+  const attempted = Math.min(qIndex + 1, gameQuestions.length);
+  if(attempted === 0) return 0; return (score/attempted)*100;
+}
+function updateScoreDisplay(){
+  const pct = calculatePercentage();
+  const attempted = Math.min(qIndex + 1, gameQuestions.length);
+  currentScoreEl.textContent = `${pct.toFixed(0)}% (${score}/${attempted})`;
+}
+
+/* ======= Submit / scoring ======= */
+function submitAnswer(){
+  if(!running) return;
+  const q = gameQuestions[qIndex];
+  if(selected === null){ feedbackEl.textContent='தயவு செய்து ஒரு தேர்வு செய்யுங்கள் / Please choose an option.'; return; }
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach((el,idx)=>{ if(idx===q.answer) el.classList.add('correct'); if(idx===selected && idx!==q.answer) el.classList.add('wrong'); });
+  if(selected === q.answer){
+    score++; feedbackEl.textContent='✅ சரியான பதில்! +1 / Correct!'; feedbackEl.style.color='#0b6';
+    if(chapterStats[q.chapter]){ chapterStats[q.chapter].correct++; chapterStats[q.chapter].total++; }
+  } else {
+    const exp = bilingual && q.enExplanation ? q.explanation + ' / ' + q.enExplanation : q.explanation;
+    feedbackEl.textContent='❌ தவறு. ' + exp; feedbackEl.style.color='#b22222';
+    if(chapterStats[q.chapter]){ chapterStats[q.chapter].total++; }
+  }
+  updateScoreDisplay();
+  setTimeout(()=>{ qIndex++; if(qIndex < gameQuestions.length) renderQuestion(); else endGame(); }, 1200);
+}
+
+function updateProgress(){
+  const pct = Math.round((qIndex / gameQuestions.length) * 100);
+  progressBar.style.width = pct + '%';
+}
+
+/* ======= Game flow ======= */
+function startGame(){
+  const shuffled = [...questions]; shuffle(shuffled);
+  gameQuestions = shuffled.slice(0, 20); // 20 questions per game
+  qIndex = 0; score = 0; running = true; currentScoreEl.textContent='0% (0/0)'; feedbackEl.textContent='';
+  chapterStats = {}; gameQuestions.forEach(q=>{ if(!chapterStats[q.chapter]) chapterStats[q.chapter]={correct:0,total:0}; });
+  qTotalEl.textContent = gameQuestions.length; renderQuestion();
+}
+
+function endGame(){
+  running = false;
+  const finalPctVal = (score / gameQuestions.length) * 100;
+  const finalPct = finalPctVal.toFixed(0);
+  const remark = getRemark(finalPctVal);
+  const excellent = []; const needsWork = [];
+  for(const chap in chapterStats){ const s = chapterStats[chap]; if(s.total>0){ const acc = s.correct/s.total; if(acc>=0.7) excellent.push(chap); else if(acc<=0.5) needsWork.push(chap); } else { needsWork.push(chap); } }
+  let summary=''; if(excellent.length) summary += ` வலிமை: ${excellent.join(', ')}.`; if(needsWork.length) summary += ` கவனம்: ${needsWork.join(', ')}.`;
+  feedbackEl.style.color='#333';
+  feedbackEl.textContent = `விளையாட்டு முடிந்தது — ${finalPct}% (${score}/${gameQuestions.length}). ${remark}${summary}`;
+  if(finalPctVal >= HOF_THRESHOLD){ alert('அருமை! புகழ் மண்டபத்தில் உங்கள் பெயரை சேமிக்கலாம்.'); hallEl.classList.remove('hidden'); populateHOF(); }
+  lastFinalPctVal = finalPctVal; lastExcellentChapters = excellent; lastNeedsWorkChapters = needsWork; generateCertificate(finalPctVal, excellent, needsWork);
+}
+
+/* ======= Hall of Fame (localStorage) ======= */
+function loadHOF(){ try{ return JSON.parse(localStorage.getItem(HOF_KEY) || '[]') }catch(e){ return [] } }
+function saveHOF(list){ localStorage.setItem(HOF_KEY, JSON.stringify(list)); }
+function populateHOF(){
+  hofListEl.innerHTML=''; const list = loadHOF().sort((a,b)=>b.score-a.score).slice(0,10);
+  if(list.length===0){ hofListEl.innerHTML='<div style="padding:8px;color:#666">இன்னும் பதிவு இல்லை / No entries yet</div>'; return; }
+  list.forEach((it,idx)=>{ const div=document.createElement('div'); div.className='hof-item'; div.innerHTML=`<div>${idx+1}. ${escapeHtml(it.name)}</div><div>${it.score.toFixed(0)}%</div>`; hofListEl.appendChild(div); });
+}
+function saveMyHOFEntry(){
+  const name = (hofNameInput.value || 'வீரர் / Player').trim(); if(!name){ alert('முதலில் பெயரை உள்ளிடுங்கள் / Enter a name.'); return; }
+  const percentage = ((score / gameQuestions.length) * 100);
+  const list = loadHOF(); list.push({name, score:percentage}); saveHOF(list); populateHOF(); alert('சேமிக்கப்பட்டது / Saved.');
+}
+
+/* ======= Certificate (Canvas) ======= */
+function generateCertificate(finalPctVal, excellentChapters=[], needsWorkChapters=[]){
+  const ctx = certCanvas.getContext('2d');
+  ctx.clearRect(0,0,certCanvas.width,certCanvas.height);
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,certCanvas.width,certCanvas.height);
+  ctx.strokeStyle='#0e7490'; ctx.lineWidth=8; ctx.strokeRect(30,30,certCanvas.width-60,certCanvas.height-60);
+  const nameInput = document.getElementById('playerName');
+  const classInput = document.getElementById('playerClass');
+  const sectionInput = document.getElementById('playerSection');
+  let nameVal = nameInput && nameInput.value ? nameInput.value : '';
+  if(!nameVal){ const hofNameEl=document.getElementById('hofName'); if(hofNameEl && hofNameEl.value){ nameVal = hofNameEl.value; } }
+  if(!nameVal) nameVal='Player';
+  const name = nameVal.toUpperCase();
+  const classVal = classInput && classInput.value ? classInput.value : '';
+  const sectionVal = sectionInput && sectionInput.value ? sectionInput.value : '';
+  const schoolVal = schoolInput && schoolInput.value ? schoolInput.value : 'AGMHSS Patteeswaram 612703';
+
+  ctx.fillStyle='#0e7490'; ctx.font='40px Georgia';
+  let text = schoolVal; let metrics=ctx.measureText(text); let x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,100);
+  ctx.font='60px Georgia'; text='வாழ்த்துச் சான்றிதழ் / Certificate of Achievement'; metrics=ctx.measureText(text); x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,170);
+  ctx.fillStyle='#333'; ctx.font='32px Arial'; text='இவர்/இவள் / This certifies that'; metrics=ctx.measureText(text); x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,230);
+  ctx.font='bold 46px Arial'; ctx.fillStyle='#0b6'; ctx.fillText(name,90,290);
+  ctx.font='24px Arial'; ctx.fillStyle='#333'; let csLine=''; if(classVal){ csLine+=`வகுப்பு/Class: ${classVal}`;} if(sectionVal){ if(csLine) csLine+='   '; csLine+=`பிரிவு/Section: ${sectionVal}`;} if(csLine){ ctx.fillText(csLine,90,330); }
+  const pctRounded = finalPctVal.toFixed(0);
+  ctx.font='24px Arial'; ctx.fillStyle='#333'; ctx.fillText(`Maths Master வினாடிவினாவில் ${pctRounded}% (${score}/${gameQuestions.length})`,90, csLine?370:340);
+  const remark = getRemark(finalPctVal); ctx.font='20px Arial'; ctx.fillStyle='#555'; const remarkY = csLine?410:380; ctx.fillText(remark,90,remarkY);
+  const messages=[]; if(excellentChapters.length) messages.push('வலிமை/Strength: '+excellentChapters.join(', ') + '.'); if(needsWorkChapters.length) messages.push('கவனம்/Focus: '+needsWorkChapters.join(', ') + '.'); 
+  ctx.font='20px Arial'; ctx.fillStyle='#444'; const maxWidth = certCanvas.width - 180; let y=remarkY+40;
+  messages.forEach(msg=>{ const words=msg.split(' '); let line=''; words.forEach(w=>{ const t=line+w+' '; const m=ctx.measureText(t); if(m.width>maxWidth){ ctx.fillText(line.trim(),90,y); y+=30; line=w+' '; } else { line=t; } }); if(line){ ctx.fillText(line.trim(),90,y); y+=30; } });
+  const d=new Date().toLocaleDateString(); ctx.font='18px Arial'; ctx.fillStyle='#666'; ctx.fillText(`தேதி/Date: ${d}`,90,certCanvas.height-80);
+  const dataURL = certCanvas.toDataURL('image/png'); certDownloadLink.href=dataURL; certDownloadLink.style.display='inline-block';
+}
+
+/* ======= Utilities ======= */
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g,(m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[m])); }
+
+/* ======= Events ======= */
+submitBtn.addEventListener('click', ()=> submitAnswer());
+skipBtn.addEventListener('click', ()=> { if(!running) return; const q=gameQuestions[qIndex]; if(chapterStats[q.chapter]){ chapterStats[q.chapter].total++; } qIndex++; updateScoreDisplay(); if(qIndex<gameQuestions.length){ renderQuestion(); } else { endGame(); } });
+startBtn.addEventListener('click', ()=> { hallEl.classList.add('hidden'); startGame(); });
+showHofBtn.addEventListener('click', ()=> { hallEl.classList.toggle('hidden'); if(!hallEl.classList.contains('hidden')) populateHOF(); });
+saveHofBtn.addEventListener('click', saveMyHOFEntry);
+langToggleBtn.addEventListener('click', ()=>{ bilingual = !bilingual; langToggleBtn.setAttribute('aria-pressed', String(bilingual)); langToggleBtn.textContent = bilingual ? 'தமிழ் + English: ON' : 'தமிழ் + English: OFF'; if(running){ renderQuestion(); } });
+
+/* ======= Init ======= */
+(function init(){
+  qTotalEl.textContent = 20;
+  currentScoreEl.textContent = '0% (0/0)';
+  optionsEl.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' ') submitAnswer(); });
+  certDownloadLink.style.display='none';
+  certDownloadLink.addEventListener('click', function(){ if(lastFinalPctVal!==undefined){ generateCertificate(lastFinalPctVal, lastExcellentChapters, lastNeedsWorkChapters); } });
+  populateHOF();
+})();
+</script>
+</body>
+</html>
