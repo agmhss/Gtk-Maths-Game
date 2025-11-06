@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Maths Master – கணித வல்லுநர் 🧮</title>
+<title>Spinners Maths Game – கணித விளையாட்டு 🧮</title>
 <style>
   :root{--bg1:#f7fbff;--card:#fff;--accent:#0e7490;--ok:#16a34a;--bad:#dc2626}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans Tamil",sans-serif;background:linear-gradient(180deg,var(--bg1),#eaf6ff);display:flex;align-items:center;justify-content:center;padding:12px}
@@ -38,7 +38,9 @@
   <div class="wrap" role="application" aria-label="Maths Master – கணித வல்லுநர்">
     <header>
       <div>
-        <h1>Maths Master – கணித வல்லுநர் 🧮</h1>
+        <h1>Spinners Maths Game  – கணித விளையாட்டு 🧮</h1>
+        <h1>Team Members: Rithika B, Ajitha R, Varsha M, Mahasri S & Nivasri M</h1>
+        <h1>AGMHSS PATTEESWARAM</h1>
         <div style="font-size:.9rem;color:#556">10–15 வயதுக்கான கணித வினாடிவினா – பயிற்சியுடன் செம்மையாகுங்கள்!</div>
       </div>
       <div class="meta" aria-live="polite">
@@ -60,10 +62,10 @@
 
     <!-- வீரரின் விவரங்கள் (சான்றிதழ்) -->
     <div id="playerDetails" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
-      <input id="playerName" placeholder="பெயர் / Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="50" />
-      <input id="playerClass" placeholder="வகுப்பு / Class" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="20" />
-      <input id="playerSection" placeholder="பிரிவு / Section" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="20" />
-      <input id="playerSchool" placeholder="பள்ளி பெயர் / School Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 100%" maxlength="80" />
+      <input id="playerName" placeholder=" Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="50" />
+      <input id="playerClass" placeholder="Class" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="20" />
+      <input id="playerSection" placeholder="Section" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 30%" maxlength="20" />
+      <input id="playerSchool" placeholder="School Name" style="padding:8px;border-radius:8px;border:1px solid #e1eefc;flex:1 1 100%" maxlength="80" />
     </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
@@ -223,7 +225,7 @@ const langToggleBtn = document.getElementById('langToggle');
 const schoolInput = document.getElementById('playerSchool');
 
 const HOF_KEY = 'mathsMasterHOF';
-const HOF_THRESHOLD = 60; // %
+const HOF_THRESHOLD = 50; // %
 let bilingual = false;
 
 /* ======= Helpers ======= */
@@ -231,7 +233,7 @@ function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.
 function clearTimer(){}
 function getRemark(pct){
   if(pct >= 90) return 'அற்புதம்! தொடர்ந்து பயிற்சி செய்யுங்கள்! / Outstanding!';
-  if(pct >= 75) return 'சிறப்பான வேலை! / Great job!';
+  if(pct >= 70) return 'சிறப்பான வேலை! / Great job!';
   if(pct >= 50) return 'நல்ல முயற்சி! / Good effort!';
   if(pct > 0) return 'கவலைப்பட வேண்டாம், தொடர்ந்து பயிற்சி செய்யுங்கள்! / Keep practising!';
   return 'மீண்டும் முயற்சிக்கவும்! / Try again!';
@@ -300,7 +302,7 @@ function updateProgress(){
 /* ======= Game flow ======= */
 function startGame(){
   const shuffled = [...questions]; shuffle(shuffled);
-  gameQuestions = shuffled.slice(0, 20); // 20 questions per game
+  gameQuestions = shuffled.slice(0, 10); // 10 questions per game
   qIndex = 0; score = 0; running = true; currentScoreEl.textContent='0% (0/0)'; feedbackEl.textContent='';
   chapterStats = {}; gameQuestions.forEach(q=>{ if(!chapterStats[q.chapter]) chapterStats[q.chapter]={correct:0,total:0}; });
   qTotalEl.textContent = gameQuestions.length; renderQuestion();
@@ -353,17 +355,17 @@ function generateCertificate(finalPctVal, excellentChapters=[], needsWorkChapter
 
   ctx.fillStyle='#0e7490'; ctx.font='40px Georgia';
   let text = schoolVal; let metrics=ctx.measureText(text); let x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,100);
-  ctx.font='60px Georgia'; text='வாழ்த்துச் சான்றிதழ் / Certificate of Achievement'; metrics=ctx.measureText(text); x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,170);
-  ctx.fillStyle='#333'; ctx.font='32px Arial'; text='இவர்/இவள் / This certifies that'; metrics=ctx.measureText(text); x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,230);
+  ctx.font='60px Georgia'; text='Certificate of Achievement'; metrics=ctx.measureText(text); x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,170);
+  ctx.fillStyle='#333'; ctx.font='32px Arial'; text='This certifies that'; metrics=ctx.measureText(text); x=(certCanvas.width-metrics.width)/2; ctx.fillText(text,x,230);
   ctx.font='bold 46px Arial'; ctx.fillStyle='#0b6'; ctx.fillText(name,90,290);
-  ctx.font='24px Arial'; ctx.fillStyle='#333'; let csLine=''; if(classVal){ csLine+=`வகுப்பு/Class: ${classVal}`;} if(sectionVal){ if(csLine) csLine+='   '; csLine+=`பிரிவு/Section: ${sectionVal}`;} if(csLine){ ctx.fillText(csLine,90,330); }
+  ctx.font='24px Arial'; ctx.fillStyle='#333'; let csLine=''; if(classVal){ csLine+=`Class: ${classVal}`;} if(sectionVal){ if(csLine) csLine+='   '; csLine+=`Section: ${sectionVal}`;} if(csLine){ ctx.fillText(csLine,90,330); }
   const pctRounded = finalPctVal.toFixed(0);
-  ctx.font='24px Arial'; ctx.fillStyle='#333'; ctx.fillText(`Maths Master வினாடிவினாவில் ${pctRounded}% (${score}/${gameQuestions.length})`,90, csLine?370:340);
+  ctx.font='24px Arial'; ctx.fillStyle='#333'; ctx.fillText(`Maths Game  ${pctRounded}% (${score}/${gameQuestions.length})`,90, csLine?370:340);
   const remark = getRemark(finalPctVal); ctx.font='20px Arial'; ctx.fillStyle='#555'; const remarkY = csLine?410:380; ctx.fillText(remark,90,remarkY);
-  const messages=[]; if(excellentChapters.length) messages.push('வலிமை/Strength: '+excellentChapters.join(', ') + '.'); if(needsWorkChapters.length) messages.push('கவனம்/Focus: '+needsWorkChapters.join(', ') + '.'); 
+  const messages=[]; if(excellentChapters.length) messages.push('Strength: '+excellentChapters.join(', ') + '.'); if(needsWorkChapters.length) messages.push('Focus: '+needsWorkChapters.join(', ') + '.'); 
   ctx.font='20px Arial'; ctx.fillStyle='#444'; const maxWidth = certCanvas.width - 180; let y=remarkY+40;
   messages.forEach(msg=>{ const words=msg.split(' '); let line=''; words.forEach(w=>{ const t=line+w+' '; const m=ctx.measureText(t); if(m.width>maxWidth){ ctx.fillText(line.trim(),90,y); y+=30; line=w+' '; } else { line=t; } }); if(line){ ctx.fillText(line.trim(),90,y); y+=30; } });
-  const d=new Date().toLocaleDateString(); ctx.font='18px Arial'; ctx.fillStyle='#666'; ctx.fillText(`தேதி/Date: ${d}`,90,certCanvas.height-80);
+  const d=new Date().toLocaleDateString(); ctx.font='18px Arial'; ctx.fillStyle='#666'; ctx.fillText(`Date: ${d}`,90,certCanvas.height-80);
   const dataURL = certCanvas.toDataURL('image/png'); certDownloadLink.href=dataURL; certDownloadLink.style.display='inline-block';
 }
 
@@ -380,7 +382,7 @@ langToggleBtn.addEventListener('click', ()=>{ bilingual = !bilingual; langToggle
 
 /* ======= Init ======= */
 (function init(){
-  qTotalEl.textContent = 20;
+  qTotalEl.textContent = 10;
   currentScoreEl.textContent = '0% (0/0)';
   optionsEl.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' ') submitAnswer(); });
   certDownloadLink.style.display='none';
