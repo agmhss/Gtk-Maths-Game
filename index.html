@@ -5,330 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spinners Maths Game – கணித விளையாட்டு 🧮</title>
 <style>
-:root {
-  --bg1: #f7fbff;
-  --card: #fff;
-  --accent: #0e7490;
-  --ok: #16a34a;
-  --bad: #dc2626;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans Tamil", sans-serif;
-  background: linear-gradient(180deg, var(--bg1), #eaf6ff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  );
-  color: #fff;
-  border: 0;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: background 0.2s ease;
-}
-button:hover {
-  background: #0a6078;
-}
-
-.btn-ghost {
-  background: #fff;
-  border: 1px solid #dbeefe;
-  color: var(--accent);
-}
-
-.progress {
-  height: 8px;
-  background: #eef6ff;
-  border-radius: 10px;
-  margin-top: 10px;
-  overflow: hidden;
-}
-.progress > i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, #0e7490, #38bdf8);
-  width: 0%;
-}
-
-.feedback {
-  margin-top: 10px;
-  font-weight: 700;
-  min-height: 24px;
-  text-align: center;
-}
-
-#playerDetails {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-}
-#playerDetails input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e1eefc;
-  flex: 1 1 45%;
-}
-
-.hall {
-  margin-top: 14px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #fff7ef;
-  border: 1px solid #ffe6c7;
-}
-
-.hof-list {
-  margin-top: 8px;
-}
-
-.hof-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px dashed #ffefdd;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.download-link {
-  margin-top: 10px;
-  display: none;
-}
-
-@media (max-width: 520px) {
-
+  :root{--bg1:#f7fbff;--card:#fff;--accent:#0e7490;--ok:#16a34a;--bad:#dc2626}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans Tamil",sans-serif;background:linear-gradient(180deg,var(--bg1),#eaf6ff);display:flex;align-items:center;justify-content:center;padding:12px}
+  .wrap{width:100%;max-width:780px;background:var(--card);border-radius:16px;box-shadow:0 10px 30px rgba(3,27,78,.12);padding:18px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+  header h1{margin:0;font-size:1.25rem;color:var(--accent)}
+  .meta{margin-left:auto;text-align:right;font-size:.9rem}
+  .score{font-weight:700;color:#0b6;display:block;font-size:1.3rem}
+  .card{padding:14px;border-radius:12px;border:1px solid #e6f1ff;background:linear-gradient(180deg,#fff,#fbfeff);margin-bottom:12px}
+  .sentence{font-size:1.08rem;padding:10px;border-radius:10px;background:#f5fbff;border:1px dashed #dbeaff;min-height:48px;display:flex;align-items:center}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+  .opt{padding:12px;border-radius:10px;border:1px solid #e6eefc;background:white;cursor:pointer;user-select:none}
+  .opt.selected{outline:3px solid rgba(14,116,144,.14)}
+  .opt.correct{border-color:var(--ok);background:rgba(16,185,129,.06)}
+  .opt.wrong{border-color:var(--bad);background:rgba(220,38,38,.05)}
+  .controls{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  button{background:var(--accent);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn-ghost{background:#fff;border:1px solid #dbeefe;color:var(--accent)}
+  .progress{height:8px;background:#eef6ff;border-radius:10px;margin-top:8px;overflow:hidden}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,#0e7490,#38bdf8);width:0%}
+  .feedback{margin-top:8px;font-weight:700;min-height:24px}
+  .hall{margin-top:10px;padding:12px;border-radius:10px;background:#fff7ef;border:1px solid #ffe6c7}
+  .hof-list{margin-top:8px}
+  .hof-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #ffefdd}
+  .certificate{display:none}
+  .hidden{display:none}
+  .download-link{margin-top:10px;display:none}
+  @media(max-width:520px){.options{grid-template-columns:1fr} .meta{text-align:left;margin-left:0} #playerDetails{flex-direction:column} #playerDetails input{flex:1 1 100%;width:100%}}
+</style>
 </head>
 <body>
   <div class="wrap" role="application" aria-label="Maths Master – கணித வல்லுநர்">
     <header>
       <div>
         <h1 style="text-align: center;">Spinners Maths Game  – கணித விளையாட்டு 🧮</h1>
-        <h1>Team Members: Rithika B, Ajitha R, Varsha M, Mahasri S &<style>
-:root {
-  --bg1: #f7fbff;
-  --card: #fff;
-  --accent: #0e7490;
-  --ok: #16a34a;
-  --bad: #dc2626;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans Tamil", sans-serif;
-  background: linear-gradient(180deg, var(--bg1), #eaf6ff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px;
-}
-
-.wrap {
-  width: 100%;
-  max-width: 760px;
-  background: var(--card);
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(3, 27, 78, 0.12);
-  padding: 18px;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-header h1 {
-  margin: 6px 0;
-  font-size: 1.1rem;
-  color: var(--accent);
-  line-height: 1.4;
-}
-
-.meta {
-  margin-top: 5px;
-  font-size: 0.95rem;
-  color: #0b6;
-  font-weight: 600;
-}
-
-.card {
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #e6f1ff;
-  background: linear-gradient(180deg, #fff, #fbfeff);
-  margin-bottom: 14px;
-}
-
-.sentence {
-  font-size: 1.05rem;
-  padding: 10px;
-  border-radius: 10px;
-  background: #f5fbff;
-  border: 1px dashed #dbeaff;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.opt {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #e6eefc;
-  background: white;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.2s ease;
-}
-.opt:hover {
-  background: #f0faff;
-}
-.opt.selected {
-  outline: 3px solid rgba(14, 116, 144, 0.18);
-}
-.opt.correct {
-  border-color: var(--ok);
-  background: rgba(16, 185, 129, 0.06);
-}
-.opt.wrong {
-  border-color: var(--bad);
-  background: rgba(220, 38, 38, 0.05);
-}
-
-.controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-
-button {
-  background: var(--accent);
-  color: #fff;
-  border: 0;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.2s ease;
-}
-button:hover {
-  background: #0a6078;
-}
-.btn-ghost {
-  background: #fff;
-  border: 1px solid #dbeefe;
-  color: var(--accent);
-}
-
-.progress {
-  height: 8px;
-  background: #eef6ff;
-  border-radius: 10px;
-  margin-top: 8px;
-  overflow: hidden;
-}
-.progress > i {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, #0e7490, #38bdf8);
-  width: 0%;
-}
-
-.feedback {
-  margin-top: 8px;
-  font-weight: 600;
-  text-align: center;
-  min-height: 24px;
-}
-
-#playerDetails {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-#playerDetails input {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e1eefc;
-  flex: 1 1 calc(50% - 8px);
-  min-width: 150px;
-}
-
-.hall {
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  background: #fff7ef;
-  border: 1px solid #ffe6c7;
-}
-
-.hof-list {
-  margin-top: 8px;
-}
-.hof-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px dashed #ffefdd;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.download-link {
-  margin-top: 10px;
-  display: none;
-}
-
-/* ✅ MOBILE FIXES */
-@media (max-width: 520px) {
-  .wrap {
-    padding: 14px;
-  }
-  header h1 {
-    font-size: 1rem;
-  }
-  .sentence {
-    font-size: 1rem;
-  }
-  .options {
-    grid-template-columns: 1fr;
-  }
-  .controls button {
-    flex: 1 1 auto;
-    min-width: 45%;
-  }
-  #playerDetails input {
-    flex: 1 1 100%;
-    width: 100%;
-  }
-  button {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
-}
-</style> Nivasri M</h1>
+        <h1>Team Members: Rithika B, Ajitha R, Varsha M, Mahasri S & Nivasri M</h1>
         <h1 style="text-align: center;">AGMHSS PATTEESWARAM</h1>
         <div style="text-align: center;font-size:.9rem;color:#556">10–15 வயதுக்கான கணித வினாடிவினா – பயிற்சியுடன் செம்மையாகுங்கள்!</div>
       </div>
